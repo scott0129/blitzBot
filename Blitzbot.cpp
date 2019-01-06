@@ -24,8 +24,6 @@ void Blitzbot::initialize(int argc, const char* argv[]) {
 	}
 	parseArgs(argc, argv);	
 
-	//printBoard();
-
 }
 
 void Blitzbot::printBoard() {
@@ -34,20 +32,35 @@ void Blitzbot::printBoard() {
 	}
 }
 
-void Blitzbot::findWordsAt(int x, int y, Graphnode* node, char* foundWord, int idx) {
-	if (getChar(x, y) == 's' || foundWord[0] == 's') {
-//		fprintf(stderr, "checked letter at %c\n", getChar(x, y));
+void Blitzbot::printPath(Coordinate* solutionPath, int pathLength) {
+	char board[16];
+	memset(board, 'x', 16);
+	for (int i = 0; i < pathLength; i++) {
+		board[solutionPath[i].first + solutionPath[i].second * 4] = '1' + i;	
 	}
+
+	for (int y = 0; y < 4; y++) {
+		fprintf(stdout, "%c %c %c %c\n\n", board[0 + y*4], board[1 + y*4], board[2 + y*4], board[3 + y*4]); 
+	}
+	fprintf(stdout, "---------------\n");
+}
+
+void Blitzbot::findWordsAt(int x, int y, Graphnode* node, Coordinate* solutionPath, int idx) {
+
 	if (node == NULL) {
 		return;
 	}
 	
 	if (node->terminator) {
-		foundWord[idx] = '\0';
-		std::string convertedString = foundWord;
-		if (hashmap.find(foundWord) == hashmap.end()) {
-			printf("%s\n", foundWord);
-			hashmap[foundWord] = 1;
+		char foundChars[16];
+		for (int i = 0; i < idx; i++) {
+			foundChars[i] = solutionPath[i].character;
+		}
+		std::string convertedString = foundChars;
+		if (hashmap.find(convertedString) == hashmap.end()) {
+			std::cout << convertedString << std::endl;
+			hashmap[convertedString] = 1;
+			printPath(solutionPath, idx);
 		}
 	}
 
@@ -56,27 +69,28 @@ void Blitzbot::findWordsAt(int x, int y, Graphnode* node, char* foundWord, int i
 	if ( c == '\0' ) {
 		return;
 	} else {
-		foundWord[idx] = c;
+		solutionPath[idx] = Coordinate(x, y, c);
 	}
-	findWordsAt(x + 1, y, node->letters[c - 'a'], foundWord, idx + 1);
-	findWordsAt(x, y + 1, node->letters[c - 'a'], foundWord, idx + 1);
-	findWordsAt(x - 1, y, node->letters[c - 'a'], foundWord, idx + 1);
-	findWordsAt(x, y - 1, node->letters[c - 'a'], foundWord, idx + 1);
+	findWordsAt(x + 1, y, node->letters[c - 'a'], solutionPath, idx + 1);
+	findWordsAt(x, y + 1, node->letters[c - 'a'], solutionPath, idx + 1);
+	findWordsAt(x - 1, y, node->letters[c - 'a'], solutionPath, idx + 1);
+	findWordsAt(x, y - 1, node->letters[c - 'a'], solutionPath, idx + 1);
 
-	findWordsAt(x + 1, y + 1, node->letters[c - 'a'], foundWord, idx + 1);
-	findWordsAt(x - 1, y + 1, node->letters[c - 'a'], foundWord, idx + 1);
-	findWordsAt(x + 1, y - 1, node->letters[c - 'a'], foundWord, idx + 1);
-	findWordsAt(x - 1, y - 1, node->letters[c - 'a'], foundWord, idx + 1);
+	findWordsAt(x + 1, y + 1, node->letters[c - 'a'], solutionPath, idx + 1);
+	findWordsAt(x - 1, y + 1, node->letters[c - 'a'], solutionPath, idx + 1);
+	findWordsAt(x + 1, y - 1, node->letters[c - 'a'], solutionPath, idx + 1);
+	findWordsAt(x - 1, y - 1, node->letters[c - 'a'], solutionPath, idx + 1);
 	setBool(x, y, 1);
 }
 
 void Blitzbot::findAllWords() {
 	char* foundWord = (char*)malloc(20);
+	Coordinate* solutionPath = (Coordinate*)malloc(sizeof(Coordinate*) * 16);
 	for (int i = 0; i < 4; ++i) {
 		for (int j = 0; j < 4; j++) {
 			memset(foundWord, 0, 17);
 			strcpy(boolBoard, gameBoard);
-			findWordsAt(i, j, root, foundWord, 0);
+			findWordsAt(i, j, root, solutionPath, 0);
 		}
 	}
 	free(foundWord);

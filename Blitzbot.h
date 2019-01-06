@@ -8,12 +8,14 @@ static const std::string WORD_FILENAME = "words_alpha.txt";
 class Blitzbot {
 	
 	struct Coordinate {
-		Coordinate(int one, int two) {
+		Coordinate(int one, int two, char setChar) {
 			first = one;
 			second = two;
+			character = setChar;
 		};
 		int first;
 		int second;
+		char character;
 	};
 
 	struct Graphnode {
@@ -34,7 +36,7 @@ class Blitzbot {
 		void initialize(int argc, const char* argv[]);
 		void parseArgs(int argc, const char* argv[]);
 
-		void findWordsAt(int x, int y, Graphnode* node, char* foundWord, int idx);
+		void findWordsAt(int x, int y, Graphnode* node, Coordinate* solutionPath, int idx);
 		void findAllWords();
 
 		//gets char at location on the board, (0, 0) is top left
@@ -50,6 +52,7 @@ class Blitzbot {
 
 		char getBool(int x, int y);
 		void setBool(int x, int y, char c);
+		void printPat(Coordinate* solutionPath, int pathLength);
 
 		Graphnode* root;
 		std::unordered_map<std::string, int> hashmap;
