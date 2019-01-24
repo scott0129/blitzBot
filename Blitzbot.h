@@ -52,7 +52,7 @@ class Blitzbot {
 
 		char getBool(int x, int y);
 		void setBool(int x, int y, char c);
-		void printPat(Coordinate* solutionPath, int pathLength);
+		void printPath(Coordinate* solutionPath, int pathLength);
 
 		Graphnode* root;
 		std::unordered_map<std::string, int> hashmap;

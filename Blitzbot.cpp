@@ -39,10 +39,10 @@ void Blitzbot::printPath(Coordinate* solutionPath, int pathLength) {
 		board[solutionPath[i].first + solutionPath[i].second * 4] = '1' + i;	
 	}
 
-	for (int y = 0; y < 4; y++) {
-		fprintf(stdout, "%c %c %c %c\n\n", board[0 + y*4], board[1 + y*4], board[2 + y*4], board[3 + y*4]); 
-	}
-	fprintf(stdout, "---------------\n");
+	//for (int y = 0; y < 4; y++) {
+	//	fprintf(stdout, "%c %c %c %c\n\n", board[0 + y*4], board[1 + y*4], board[2 + y*4], board[3 + y*4]); 
+	//}
+	//fprintf(stdout, "---------------\n");
 }
 
 void Blitzbot::findWordsAt(int x, int y, Graphnode* node, Coordinate* solutionPath, int idx) {
