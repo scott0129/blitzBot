@@ -1,8 +1,9 @@
 #include "Blitzbot.h"
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+// #include <opencv2/core/core.hpp>
+// #include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
 #include <fstream>
+#include <cstring>
 
 Blitzbot::Blitzbot() {
 	return;
@@ -53,12 +54,14 @@ void Blitzbot::findWordsAt(int x, int y, Graphnode* node, Coordinate* solutionPa
 	
 	if (node->terminator) {
 		char foundChars[16];
+    memset(foundChars, 0, 16);
 		for (int i = 0; i < idx; i++) {
 			foundChars[i] = solutionPath[i].character;
 		}
 		std::string convertedString = foundChars;
 		if (hashmap.find(convertedString) == hashmap.end()) {
-			std::cout << convertedString << std::endl;
+			// std::cout << convertedString << std::endl;
+      matches.push_back(convertedString);
 			hashmap[convertedString] = 1;
 			printPath(solutionPath, idx);
 		}
@@ -178,7 +181,21 @@ void Blitzbot::buildTree(std::string filename) {
 }
 
 
+void Blitzbot::printAllWords() {
+  struct compare {
+    bool operator()(const std::string& first, const std::string& second) {
+      return first.size() < second.size();
+    }
+  };
+  compare c;
+  std::sort(matches.begin(), matches.end(), c);
+  for (unsigned i = 0; i < matches.size(); i++){
+    std::cout << matches[i] << std::endl;
+  }
+}
+
 void Blitzbot::run() {
-	//Find words that have the pattern	
-	findAllWords();
+  //Find words that have the pattern	
+  findAllWords();
+  printAllWords();
 }

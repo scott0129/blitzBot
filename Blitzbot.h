@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <vector>
 #include <unordered_map>
 
 static const std::string WORD_FILENAME = "words_alpha.txt";
@@ -31,6 +32,7 @@ class Blitzbot {
 	};
 
 	
+  std::vector<std::string> matches;
 	public:
 		Blitzbot();
 		void initialize(int argc, const char* argv[]);
@@ -38,6 +40,7 @@ class Blitzbot {
 
 		void findWordsAt(int x, int y, Graphnode* node, Coordinate* solutionPath, int idx);
 		void findAllWords();
+		void printAllWords();
 
 		//gets char at location on the board, (0, 0) is top left
 		char getChar(int x, int y);
