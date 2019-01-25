@@ -18,3 +18,7 @@ main.o : main.cpp Blitzbot.h
 
 Blitzbot.o : Blitzbot.cpp Blitzbot.h
 	$(CXX) $(CXXFLAGS) Blitzbot.cpp $(LIBS)
+
+
+clean:
+	rm -rf .objs $(EXENAME) $(OBJS)
